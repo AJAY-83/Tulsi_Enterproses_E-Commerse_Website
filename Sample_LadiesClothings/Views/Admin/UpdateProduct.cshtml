@@ -1,0 +1,36 @@
+﻿@model Product
+
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">Update/Edit Product</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <form method="post" asp-controller="Admin" asp-action="UpdateProduct">
+            <input type="hidden" name="Product_Id" value="@Model.Product_Id" />
+            <input type="hidden" name="Product_Image" value="@Model.Product_Image" />
+            <input type="text" palceholder="Enter Your Product Name" name="Product_Name" class="form-control my-3" value="@Model.Product_Name" />
+            <input type="text" palceholder="Enter Your Product Description" name="Product_Description" class="form-control my-3" value="@Model.Product_Description" />
+            <input type="text" palceholder="Enter Your Product Price" name="Product_Price" class="form-control my-3" value="@Model.Product_Price" />
+@*             <input type="text" palceholder="Enter Your Category_Id" name="Category_Id" class="form-control my-3" value="@Model.Category_Id" />
+ *@
+            @Html.Partial("CategoryDropdown", ViewData["Categories"])
+            <input type="submit" value="Update Product" class="btn btn-primary form-control my-3" />
+
+        </form>
+
+        <form method="post" asp-controller="Admin" asp-action="Change_Product_Picture" enctype="multipart/form-data">
+            <input type="file" name="Product_Image" class="form-control my-3" />
+            <img src="@("~/Product_images/" + Model.Product_Image)" asp-append-version="true" style="height:250px;width:250px" />
+            <input type="hidden" name="Product_Id" value="@Model.Product_Id" />
+            <input type="hidden" name="Product_Name" value="@Model.Product_Name" />
+            <input type="hidden" name="Product_Description" value="@Model.Product_Description" />
+            <input type="hidden" name="Product_Price" value="@Model.Product_Price" />
+            <input type="hidden" name="Category_Id" value="@Model.Category_Id" />
+
+            <input type="submit" value="Change Product Picture" class="btn btn-primary form-control my-3" />
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+</div>

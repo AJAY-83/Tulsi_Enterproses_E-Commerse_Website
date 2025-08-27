@@ -1,0 +1,71 @@
+﻿@model Customer
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase text-danger" style="letter-spacing:4px">Are You Sure Want To Delete This Customer </h2>
+</div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+
+                        <!-- Left: Profile Image -->
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <img src="@("~/Customer_Images/" + Model.Customer_Image)"
+                                 asp-append-version="true"
+                                 class="img-thumbnail shadow-sm"
+                                 style="width: 200px; height: 200px; object-fit: cover;"
+                                 alt="Profile Picture" />
+                        </div>
+
+                        <!-- Right: Details -->
+                        <div class="col-md-8">
+                            <h4 class="fw-bold">@Model.Customer_Name</h4>
+                            <p class="text-muted">@Model.Customer_Email</p>
+
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">Customer ID</small>
+                                    <div class="fw-semibold">@Model.Customer_Id</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">Phone</small>
+                                    <div class="fw-semibold">@Model.Customer_Phone</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">City</small>
+                                    <div class="fw-semibold">@Model.Customer_City</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">Country</small>
+                                    <div class="fw-semibold">@Model.Customer_Country</div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <small class="text-secondary">Address</small>
+                                    <div class="fw-semibold">@Model.Customer_Address</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">Gender</small>
+                                    <div class="fw-semibold">@Model.Customer_Gender</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">Password</small>
+                                    <div class="fw-semibold text-danger">@Model.Customer_PasswordHash</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="@Url.Action("DeleteCustomer", "Admin", new { id = @Model.Customer_Id })" class="btn btn-danger px-4 me-2">Delete Customer</a>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a href="@Url.Action("FetchCustomers", "Admin")" class="btn btn-warning px-4 me-2">See Customers List</a>
+                        </div>
+                    </div> <!-- row -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

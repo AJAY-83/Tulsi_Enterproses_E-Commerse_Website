@@ -1,0 +1,44 @@
+﻿@model List<Customer>
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">All Customers</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-striped text-center mt-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>                   
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Gender</th>
+                    <th>Option</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cust in Model)
+                {
+                    <tr>
+                        <td>@cust.Customer_Name </td>
+                        <td>@cust.Customer_Email </td>
+                        <td>@cust.Customer_Country </td>
+                        <td>@cust.Customer_City </td>
+                        <td>@cust.Customer_Address </td>
+                        <td>@cust.Customer_Phone </td>
+                        <td>@cust.Customer_Gender </td>
+                        <td>
+                            <a href="@Url.Action("CustomerDetail", "Admin", new { id = @cust.Customer_Id })" class="btn btn-primary">Details</a>
+                            <a href="@Url.Action("UpdateCustomer","Admin", new{id=@cust.Customer_Id})" class="btn btn-warning">Update</a>
+                            <a href="@Url.Action("DeletPerssion", "Admin", new { id = @cust.Customer_Id })" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    
+                } 
+
+            </tbody>
+        </table>
+    </div>
+</div>

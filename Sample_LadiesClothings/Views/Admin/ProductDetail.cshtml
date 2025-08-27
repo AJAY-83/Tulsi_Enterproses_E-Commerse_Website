@@ -1,0 +1,76 @@
+﻿@model Product
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">Product Details</h2>
+</div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+
+                        <!-- Left: Profile Image -->
+                        @* <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <img src="@("~/Product_images/" + Model.Product_Image)"
+                                 asp-append-version="true"
+                                 class="img-thumbnail shadow-sm"
+                                 style="width: 200px; height: 200px; object-fit: cover;"
+                                 alt="Profile Picture" />
+                        </div> *@
+                        <!-- Multiple Images Gallery -->
+                        <div class="col-12 mb-3">
+                            <h5 class="text-center mb-4">Product Images</h5>
+
+                            @if (!string.IsNullOrEmpty(Model.Product_Image))
+                            {
+                                var images = Model.Product_Image.Split(',');
+                                <div class="d-flex flex-wrap justify-content-center gap-3">
+                                    @foreach (var img in images)
+                                    {
+                                        <img src="~/Product_Images/@img"
+                                             asp-append-version="true"
+                                             class="img-thumbnail shadow-sm"
+                                             style="width: 180px; height: 180px; object-fit: cover;" />
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-center text-muted">No images available.</p>
+                            }
+                        </div>
+
+                        <!-- Right: Details -->
+                        <div class="col-12 mt-4">
+                            <small class="text-secondary">Product Name</small>
+                            <h4 class="fw-bold">@Model.Product_Name</h4>
+                            <small class="text-secondary">Product Description</small>
+                            <p class="fw-bold">@Model.Product_Description</p>
+                            </div>
+                            <div class="row g-3">
+
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">Product ID</small>
+                                    <div class="fw-semibold">@Model.Product_Id</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">Price</small>
+                                    <div class="fw-semibold">@Model.Product_Price</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-secondary">Category</small>
+                                    <div class="fw-semibold">@Model.category.Category_Name</div>
+                                </div>
+                               
+                            </div>
+                        </div>
+
+                    </div> <!-- row -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

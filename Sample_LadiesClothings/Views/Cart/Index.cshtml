@@ -1,0 +1,61 @@
+﻿@model List<Sample_LadiesClothings.Models.CartItem>
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>Your Cart</h3>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Cart is empty.</div>
+}
+else
+{
+    <table class="table align-middle">
+        <thead>
+            <tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td class="d-flex align-items-center gap-2">
+                    @if (!string.IsNullOrEmpty(i.Product_Image))
+                    {
+                        var images = i.Product_Image.Split(',');
+                        <div class="d-flex">
+                            @foreach (var img in images.Take(3))  // Show first 3 images
+                            {
+                                <img src="~/Product_Images/@(img)"
+                                     style="width:60px;height:60px;object-fit:cover;margin-right:5px;"
+                                     class="rounded shadow-sm" />
+                            }
+                            @if (images.Length > 3)
+                            {
+                                <span class="badge bg-secondary align-self-center">+@((images.Length - 3))</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <img src="~/Product_Images/noimage.png"
+                             style="width:60px;height:60px;object-fit:cover;"
+                             class="rounded" />
+                    }
+                    <div class="ms-2">@i.Product_Name</div>
+</td>
+                    <td>₹ @i.Product_Price</td>
+                    <td>@i.Quantity</td>
+                    <td>₹ @(i.LineTotal)</td>
+                    <td><a class="btn btn-sm btn-outline-danger" href="/Cart/Remove/@i.Product_Id">Remove</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-between">
+        <a href="/Products" class="btn btn-outline-secondary">Continue Shopping</a>
+        <div>
+            <span class="me-3 fw-bold">Grand Total: ₹ @Model.Sum(x => x.LineTotal)</span>
+            <a href="/Cart/Checkout" class="btn btn-dark">Checkout</a>
+        </div>
+    </div>
+}

@@ -1,0 +1,17 @@
+﻿@model Category
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">Update/Edit Categoty </h2>
+</div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+
+        <form method="post" asp-action="UpdateCategory" asp-controller="Admin" >
+            <input type="hidden" name="Category_Id" value="@Model.Category_Id" />
+            <input type="text" palceholder="Enter Your Category  Name" name="Category_Name" class="form-control my-3" value="@Model.Category_Name" />
+            
+            <input type="submit" value="Update Category" class="btn btn-success form-control my-3" />
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+</div>

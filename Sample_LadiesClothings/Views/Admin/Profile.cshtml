@@ -1,0 +1,32 @@
+﻿@model List<Admin>
+
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">My Profile</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <form method="post" asp-controller="Admin" asp-action="Profile">
+            <input type="hidden" name="Admin_Id" value="@Model[0].Admin_Id" />
+            <input type="text" palceholder="Enter Your Name" name="Admin_Name" class="form-control my-3" value="@Model[0].Admin_Name" />
+            <input type="text" palceholder="Enter Your Email" name="Admin_Email" class="form-control my-3" value="@Model[0].Admin_Email" />
+            <input type="password" palceholder="Enter Your Password" name="Admin_Password" class="form-control my-3" value="@Model[0].Admin_Password" />
+    <input type="submit" value="Update Profile" class="btn btn-primary form-control my-3"  />
+
+</form>
+
+ <form method="post" asp-controller="Admin" asp-action="Change_Profile_Picture" enctype="multipart/form-data">
+            <input type="file" name="Admin_Image" class="form-control my-3" />
+            <img src="@("~/Admin_images/" + Model[0].Admin_Image)"  asp-append-version="true" style="height:250px;width:250px"/>
+            <input type="hidden" name="Admin_Id" value="@Model[0].Admin_Id" />
+            <input type="hidden" name="Admin_Email" value="@Model[0].Admin_Email" />
+            <input type="hidden" name="Admin_Name" value="@Model[0].Admin_Name" />
+            <input type="hidden" name="Admin_Password" value="@Model[0].Admin_Password" />
+
+
+            <input type="submit" value="Change Profile Picture" class="btn btn-primary form-control my-3" />
+ </form>
+</div>
+    <div class="col-md-2"></div>
+</div>

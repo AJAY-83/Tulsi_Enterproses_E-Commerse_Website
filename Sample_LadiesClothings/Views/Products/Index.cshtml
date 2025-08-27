@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Sample_LadiesClothings.Models.Product>
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4 fw-bold text-center">Our Latest Collections</h2>
+
+<form method="get" class="row g-3 align-items-end mb-4 bg-light p-3 rounded shadow-sm">
+    <div class="col-12 col-md-4">
+        <label class="form-label fw-semibold">Search</label>
+        <input type="text" name="q" value="@ViewBag.Search" class="form-control" placeholder="Search products..." />
+    </div>
+    <div class="col-12 col-md-4">
+        <label class="form-label fw-semibold">Category</label>
+        <select class="form-select" name="categoryId">
+            <option value="">All</option>
+            @foreach (var c in (IEnumerable<Sample_LadiesClothings.Models.Category>)ViewBag.Categories)
+            {
+                if (ViewBag.CategoryId == c.Category_Id)
+                {
+                    <option value="@c.Category_Id" selected>@c.Category_Name</option>
+                }
+                else
+                {
+                    <option value="@c.Category_Id">@c.Category_Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
+        <button class="btn btn-dark w-100 rounded-pill shadow-sm">Filter</button>
+    </div>
+</form>
+
+<div class="row g-4">
+    @foreach (var p in Model)
+    {
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card h-100 p-2 border-0 shadow-sm rounded-4 hover-shadow transition">
+                <div class="position-relative overflow-hidden">
+                    @if (!string.IsNullOrEmpty(p.Product_Image))
+                    {
+                        var images = p.Product_Image.Split(',');
+                        <img src="~/Product_Images/@images[0]"
+                             data-second="~/Product_Images/@(images.Length > 1 ? images[1] : images[0])"
+                             class="card-img-top product-img rounded-3"
+                             style="height:220px; object-fit:cover; transition:opacity 0.4s ease;" />
+                    }
+                    else
+                    {
+                        <img src="~/Product_Images/noimage.png"
+                             class="card-img-top rounded-3"
+                             style="height:220px; object-fit:cover;" />
+                    }
+            </div>
+            <div class="card-body text-center">
+                <h6 class="card-title fw-semibold mb-1">@p.Product_Name</h6>
+                <div class="small text-muted mb-1">
+                    @(((IEnumerable<Sample_LadiesClothings.Models.Category>)ViewBag.Categories)
+                                        .FirstOrDefault(x => x.Category_Id == p.Category_Id)?.Category_Name)
+                </div>
+                <div class="fw-bold mt-1 text-success fs-5">₹ @p.Product_Price</div>
+            </div>
+            <div class="p-2">
+                <a href="/Products/Details/@p.Product_Id" class="btn btn-dark w-100 rounded-pill shadow-sm hover-zoom">View Details</a>
+            </div>
+        </div>
+    </div>
+        }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Image hover swap with fade effect
+            // $(".product-img").hover(
+            //     function () {
+            //         const secondImg = $(this).attr("data-second");
+            //         if (secondImg) {
+            //             $(this).stop().fadeOut(200, function () {
+            //                 $(this).attr("src", secondImg).fadeIn(200);
+            //             });
+            //         }
+            //     },
+            //     function () {
+            //         const originalImg = $(this).attr("src").replace(/\/[^\/]*$/, '/' + $(this).attr("data-second").split('/').pop());
+            //         const firstImg = $(this).attr("data-second") ? $(this).attr("data-second") : originalImg;
+            //         const mainImg = $(this).attr("src");
+            //         if (mainImg !== firstImg) {
+            //             $(this).stop().fadeOut(200, function () {
+            //                 $(this).attr("src", $(this).attr("src").replace(/[^\/]*$/, $(this).attr("data-second").split('/').shift())).fadeIn(200);
+            //             });
+            //         }
+            //     }
+            // );
+        });
+    </script>
+    <style>
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .transition {
+            transition: all 0.3s ease;
+        }
+
+        .hover-zoom:hover {
+            transform: scale(1.02);
+        }
+    </style>
+}

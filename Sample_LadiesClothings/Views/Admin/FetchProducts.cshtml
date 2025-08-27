@@ -1,0 +1,51 @@
+﻿@model List<Product>
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">All products</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success" href="@Url.Action("AddProduct", "Admin")">Add Product</a>
+        <table class="table table-bordered table-striped text-center mt-3">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Product Price</th>
+                    <th>Product Image</th>
+                    <th>Option</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.Product_Name </td>
+                        <td>@product.Product_Price </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(product.Product_Image))
+                            {
+                                var images = product.Product_Image.Split(',');
+                                foreach (var img in images)
+                                {
+                                    <img src="~/Product_Images/@img" asp-append-version="true" width="40px" height="40px" style="margin:2px;" />
+                                }
+                            }
+                            else
+                            {
+                                <span>No Image</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("ProductDetail", "Admin", new { id = @product.Product_Id })" class="btn btn-primary">Details</a>
+                            <a href="@Url.Action("UpdateProduct", "Admin", new { id = @product.Product_Id })" class="btn btn-warning">Update</a>
+                            <a href="@Url.Action("DeletePermissionProduct", "Admin", new { id = @product.Product_Id })" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

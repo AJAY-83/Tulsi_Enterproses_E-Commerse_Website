@@ -1,0 +1,26 @@
+﻿@model Customer
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">Update Customer </h2>
+</div>
+<div class="row">
+    <div class="col-md-2"></div>
+<div class="col-md-8">
+                
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="Customer_Id" value="@Model.Customer_Id" />
+    <input type="text" palceholder="Enter Your Name" name="Customer_Name" class="form-control my-3" value="@Model.Customer_Name" />
+    <input type="text" palceholder="Enter Your Email" name="Customer_Email" class="form-control my-3" value="@Model.Customer_Email" />
+    <input type="text" palceholder="Enter Your Password" name="Customer_Password" class="form-control my-3" value="@Model.Customer_PasswordHash" />
+    <input type="text" palceholder="Enter Your Country" name="Customer_Country" class="form-control my-3" value="@Model.Customer_Country" />
+    <input type="text" palceholder="Enter Your City" name="Customer_City" class="form-control my-3" value="@Model.Customer_City" />
+    <input type="text" palceholder="Enter Your Address" name="Customer_Address" class="form-control my-3" value="@Model.Customer_Address" />
+    <input type="text" palceholder="Enter Your Phone" name="Customer_Phone" class="form-control my-3" value="@Model.Customer_Phone" />
+    <input type="text" palceholder="Enter Your Gender" name="Customer_Gender" class="form-control my-3" value="@Model.Customer_Gender" />
+
+    <input type="file" name="Customer_Image" class="form-control" />
+    <input type="submit" value="Update Customer" class="btn btn-primary form-control my-3" />
+</form>
+</div>
+    <div class="col-md-2"></div>
+</div>
+        

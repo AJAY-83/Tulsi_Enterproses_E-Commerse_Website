@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Sample_LadiesClothings.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>My Orders</h3>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No orders yet.</div>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var o in Model)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fw-bold">Order #@o.Order_Id</div>
+                    <div class="small text-muted">@o.Order_Date.ToLocalTime()</div>
+                    <div>Status: @o.Status</div>
+                </div>
+                <div class="fw-bold">₹ @o.Total</div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,248 @@
+﻿@*  @model Sample_LadiesClothings.Models.Product
+@{
+    ViewData["Title"] = "Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-5">
+        @if (!string.IsNullOrEmpty(Model.Product_Image))
+        {
+            var images = Model.Product_Image.Split(',');
+            <div class="d-flex flex-column align-items-center">
+                <!-- Main Image with Zoom -->
+                <div id="mainImageWrapper" class="mb-3 position-relative">
+                    <img id="zoomImage"
+                         src="~/Product_Images/@images[0]"
+                         data-zoom-image="~/Product_Images/@images[0]"
+                         class="img-fluid rounded shadow"
+                         style="width:100%; height:400px; object-fit:cover; cursor:zoom-in;" />
+                </div>
+
+                <!-- Thumbnail Images -->
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    @foreach (var img in images)
+                    {
+                        <img src="~/Product_Images/@img"
+                             onclick="updateMainImage(this.src)"
+                             class="rounded shadow-sm"
+                             style="width:80px; height:80px; object-fit:cover; cursor:pointer; border:2px solid #ddd;" />
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <img src="~/Product_Images/noimage.png" class="img-fluid rounded shadow" style="height:400px; object-fit:cover;" />
+        }
+    </div>
+
+    <div class="col-md-7">
+        <h3>@Model.Product_Name</h3>
+        <div class="text-muted">@ViewBag.CategoryName</div>
+        <div class="display-6">₹ @Model.Product_Price</div>
+        <p class="mt-2">@Model.Product_Description</p>
+        <a href="/Cart/Add/@Model.Product_Id" class="btn btn-dark mt-3">Add to Cart</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Initialize zoom on the main image
+            $("#zoomImage").elevateZoom({
+                zoomType: "lens",
+                lensShape: "round",
+                lensSize: 150,
+                scrollZoom: true
+            });
+        });
+
+        // Function to update main image and reinitialize zoom
+        function updateMainImage(src) {
+            // Remove old zoom instance
+            $('.zoomContainer').remove();
+            $('#zoomImage').removeData('elevateZoom');
+
+            // Update image source
+            $('#zoomImage').attr('src', src).data('zoom-image', src);
+
+            // Reinitialize zoom
+            $("#zoomImage").elevateZoom({
+                zoomType: "lens",
+                lensShape: "round",
+                lensSize: 150,
+                scrollZoom: true
+            });
+        }
+    </script>
+}
+
+
+
+
+
+
+@* @section Scripts {
+    <!-- jQuery & ElevateZoom -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize zoom on main image
+            $("#zoomImage").elevateZoom({
+                zoomType: "lens", // Options: lens, inner, window
+                lensShape: "round",
+                lensSize: 150
+            });
+
+            // Hover effect on thumbnails
+            $('.thumbnail-img').hover(function () {
+                $(this).css('border-color', '#000');
+            }, function () {
+                if (!$(this).hasClass('active-thumb')) {
+                    $(this).css('border-color', '#ddd');
+                }
+            });
+
+            // Mark first thumbnail as active
+            $('.thumbnail-img:first').addClass('active-thumb').css('border-color', '#000');
+        });
+
+        // Function to update main image and zoom
+        function updateMainImage(imgElement) {
+            var newSrc = $(imgElement).attr('src');
+
+            // Update active thumbnail
+            $('.thumbnail-img').removeClass('active-thumb').css('border-color', '#ddd');
+            $(imgElement).addClass('active-thumb').css('border-color', '#000');
+
+            // Fade out old image, update src, fade in
+            $('#zoomImage').fadeOut(200, function () {
+                $(this).attr('src', newSrc)
+                       .attr('data-zoom-image', newSrc)
+                       .fadeIn(200);
+
+                // Reinitialize zoom after image change
+                $('.zoomContainer').remove(); // Remove old zoom container
+                $(this).elevateZoom({
+                    zoomType: "lens",
+                    lensShape: "round",
+                    lensSize: 150
+                });
+            });
+        }
+    </script>
+} *@
+@model Sample_LadiesClothings.Models.Product
+@{
+    ViewData["Title"] = "Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css" />
+
+<div class="row">
+    <div class="col-md-5">
+        @if (!string.IsNullOrEmpty(Model.Product_Image))
+        {
+            var images = Model.Product_Image.Split(',');
+            <div class="d-flex flex-column align-items-center">
+                <!-- Main Image (LightGallery Trigger) -->
+                <div id="lightGallery" class="mb-3 position-relative" style="cursor:pointer;">
+                    <a href="~/Product_Images/@images[0]" data-lg-size="1406-1390">
+                        <img id="zoomImage"
+                             src="~/Product_Images/@images[0]"
+                             data-zoom-image="~/Product_Images/@images[0]"
+                             class="img-fluid rounded shadow"
+                             style="width:100%; height:400px; object-fit:cover;" />
+                    </a>
+                    @for (int i = 1; i < images.Length; i++)
+                    {
+                        <a href="~/Product_Images/@images[i]" data-lg-size="1406-1390" style="display:none;"></a>
+                    }
+                </div>
+
+                <!-- Thumbnails -->
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    @foreach (var img in images)
+                    {
+                        <img src="~/Product_Images/@img"
+                             onclick="updateMainImage(this.src)"
+                             class="rounded shadow-sm thumb-image"
+                             style="width:80px; height:80px; object-fit:cover; cursor:pointer; border:2px solid #ddd;" />
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <img src="~/Product_Images/noimage.png" class="img-fluid rounded shadow" style="height:400px; object-fit:cover;" />
+        }
+    </div>
+
+    <div class="col-md-7">
+        <h3>@Model.Product_Name</h3>
+        <div class="text-muted">@ViewBag.CategoryName</div>
+        <div class="display-6">₹ @Model.Product_Price</div>
+        <p class="mt-2">@Model.Product_Description</p>
+        <a href="/Cart/Add/@Model.Product_Id" class="btn btn-dark mt-3">Add to Cart</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            function isMobile() {
+                return window.innerWidth <= 768;
+            }
+
+            // Initialize LightGallery for mobile & desktop
+            lightGallery(document.getElementById('lightGallery'), {
+                plugins: [lgZoom, lgThumbnail],
+                speed: 400,
+                download: false
+            });
+
+            // Desktop Zoom (ElevateZoom)
+            if (!isMobile()) {
+                $("#zoomImage").elevateZoom({
+                    zoomType: "lens",
+                    lensShape: "round",
+                    lensSize: 150,
+                    scrollZoom: true
+                });
+            }
+
+            // Thumbnail click handler
+            window.updateMainImage = function (src) {
+                if (!isMobile()) {
+                    $('.zoomContainer').remove();
+                    $('#zoomImage').removeData('elevateZoom');
+                    $('#zoomImage').attr('src', src).data('zoom-image', src);
+                    $("#zoomImage").elevateZoom({
+                        zoomType: "lens",
+                        lensShape: "round",
+                        lensSize: 150,
+                        scrollZoom: true
+                    });
+                } else {
+                    $('#zoomImage').attr('src', src);
+                }
+
+                // Highlight active thumbnail
+                $('.thumb-image').css('border', '2px solid #ddd');
+                $('img[src="' + src + '"]').css('border', '2px solid #000');
+            };
+        });
+    </script>
+}
