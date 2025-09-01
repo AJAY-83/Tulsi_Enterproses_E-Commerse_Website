@@ -75,6 +75,7 @@ namespace Sample_LadiesClothings.Controllers
                 ViewBag.message = "Invalid credentials";
                 return View(vm);
             }
+
             await SignInAsync(user);
             return RedirectToAction("Index", "Products");
         }
