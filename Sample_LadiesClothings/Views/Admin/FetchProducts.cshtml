@@ -1,11 +1,38 @@
-﻿@model List<Product>
+﻿@model ProductListViewModel
+
 <div class="container-fluid px-4">
-    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">All products</h2>
+    <h2 class="mt-4 text-center text-uppercase" style="letter-spacing:4px">All Products</h2>
 </div>
 
+<!-- 🔍 Search + Page Size -->
+<div class="row mb-3">
+    <div class="col-md-8 offset-md-2">
+        <form method="get" asp-action="FetchProducts" class="d-flex align-items-center">
+            
+            <!-- Search box -->
+            <input type="text" name="search" value="@Model.Search" class="form-control shadow-sm"
+                   placeholder="🔍 Search by product name or price..." />
+
+           
+
+            <button type="submit" class="btn btn-primary ms-2">Search</button>
+        </form>
+    </div>
+</div>
+
+<!-- Products Table -->
 <div class="row">
     <div class="col-md-12">
-        <a class="btn btn-success" href="@Url.Action("AddProduct", "Admin")">Add Product</a>
+        <a class="btn btn-success mb-3" href="@Url.Action("AddProduct", "Admin")">Add Product</a>
+        <form method="get" asp-action="FetchProducts" class="d-flex align-items-center">
+        <!-- Page size dropdown -->
+        <select name="pageSize" class="form-select ms-2" style="width:120px;" onchange="this.form.submit()">
+            <option value="10" selected="@(Model.PageSize == 10 ? "selected" : null)">10</option>
+            <option value="20" selected="@(Model.PageSize == 20 ? "selected" : null)">20</option>
+            <option value="50" selected="@(Model.PageSize == 50 ? "selected" : null)">50</option>
+            <option value="100" selected="@(Model.PageSize == 100 ? "selected" : null)">100</option>
+        </select>
+        </form>
         <table class="table table-bordered table-striped text-center mt-3">
             <thead>
                 <tr>
@@ -13,22 +40,22 @@
                     <th>Product Price</th>
                     <th>Product Image</th>
                     <th>Option</th>
-
                 </tr>
             </thead>
             <tbody>
-                @foreach (var product in Model)
+                @foreach (var product in Model.Products)
                 {
                     <tr>
-                        <td>@product.Product_Name </td>
-                        <td>@product.Product_Price </td>
+                        <td>@product.Product_Name</td>
+                        <td>@product.Product_Price</td>
                         <td>
                             @if (!string.IsNullOrEmpty(product.Product_Image))
                             {
                                 var images = product.Product_Image.Split(',');
                                 foreach (var img in images)
                                 {
-                                    <img src="~/Product_Images/@img" asp-append-version="true" width="40px" height="40px" style="margin:2px;" />
+                                    <img src="~/Product_Images/@img" asp-append-version="true"
+                                         width="40px" height="40px" style="margin:2px;" />
                                 }
                             }
                             else
@@ -37,15 +64,42 @@
                             }
                         </td>
                         <td>
-                            <a href="@Url.Action("ProductDetail", "Admin", new { id = @product.Product_Id })" class="btn btn-primary">Details</a>
-                            <a href="@Url.Action("UpdateProduct", "Admin", new { id = @product.Product_Id })" class="btn btn-warning">Update</a>
-                            <a href="@Url.Action("DeletePermissionProduct", "Admin", new { id = @product.Product_Id })" class="btn btn-danger">Delete</a>
+                            <a href="@Url.Action("ProductDetail", "Admin", new { id = product.Product_Id })" class="btn btn-primary">Details</a>
+                            <a href="@Url.Action("UpdateProduct", "Admin", new { id = product.Product_Id })" class="btn btn-warning">Update</a>
+                            <a href="@Url.Action("DeletePermissionProduct", "Admin", new { id = product.Product_Id })" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
-
                 }
-
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- 📑 Pagination -->
+<nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="FetchProducts"
+               asp-route-page="@(Model.CurrentPage - 1)"
+               asp-route-search="@Model.Search"
+               asp-route-pageSize="@Model.PageSize">Previous</a>
+        </li>
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="FetchProducts"
+                   asp-route-page="@i"
+                   asp-route-search="@Model.Search"
+                   asp-route-pageSize="@Model.PageSize">@i</a>
+            </li>
+        }
+
+        <li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="FetchProducts"
+               asp-route-page="@(Model.CurrentPage + 1)"
+               asp-route-search="@Model.Search"
+               asp-route-pageSize="@Model.PageSize">Next</a>
+        </li>
+    </ul>
+</nav>

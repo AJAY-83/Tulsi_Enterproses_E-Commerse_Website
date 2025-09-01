@@ -1,0 +1,113 @@
+﻿@model ProductListViewModel
+@{
+    ViewData["Title"] = "Manage Featured Products";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+
+    var serialNo = (Model.CurrentPage - 1) * Model.PageSize + 1;  // ✅ 10 rows per page
+}
+
+<div class="container-fluid px-4">
+    <h2 class="mt-4 text-center text-uppercase fw-bold text-primary" style="letter-spacing:3px">
+        Manage Featured Products
+    </h2>
+    <hr />
+
+    <!-- 🔍 Search (resets to page 1) -->
+    <div class="row mb-3">
+        <div class="col-md-6 offset-md-3">
+            <form method="get" asp-action="ManageFeatured" class="d-flex">
+                <input type="hidden" name="page" value="1" />
+                <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                <input type="text"
+                       name="search"
+                       value="@Model.Search"
+                       class="form-control shadow-sm"
+                       placeholder="🔍 Search by product name or price..." />
+                <button type="submit" class="btn btn-primary ms-2">Search</button>
+            </form>
+        </div>
+    </div>
+    <form method="get" asp-action="ManageFeatured" class="d-flex align-items-center">
+        <!-- Page size dropdown -->
+        <select name="pageSize" class="form-select ms-2" style="width:120px;" onchange="this.form.submit()">
+            <option value="10" selected="@(Model.PageSize == 10 ? "selected" : null)">10</option>
+            <option value="20" selected="@(Model.PageSize == 20 ? "selected" : null)">20</option>
+            <option value="50" selected="@(Model.PageSize == 50 ? "selected" : null)">50</option>
+            <option value="100" selected="@(Model.PageSize == 100 ? "selected" : null)">100</option>
+        </select>
+    </form>
+
+    <div class="card shadow-lg rounded-3">
+        <div class="card-body">
+            <form asp-action="UpdateFeatured" method="post">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Featured</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td>@serialNo</td>
+                                <td>
+                                    <input type="checkbox"
+                                           name="featuredIds"
+                                           value="@product.Product_Id"
+                                           @(product.IsFeatured ? "checked" : "") />
+                                </td>
+                                <td class="fw-semibold">@product.Product_Name</td>
+                                <td>@product.Product_Price</td>
+                                <td>
+                                    <img src="~/Product_Images/@product.Product_Image"
+                                         width="80" class="img-fluid rounded" />
+                                </td>
+                            </tr>
+                            serialNo++;
+                        }
+                    </tbody>
+                </table>
+
+                <button type="submit" class="btn btn-success mt-2">💾 Save Changes</button>
+            </form>
+
+            <!-- ✅ Pagination (10 per page) -->
+            <nav aria-label="Products pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="ManageFeatured"
+                           asp-route-page="@(Model.CurrentPage - 1)"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-search="@Model.Search">Previous</a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link"
+                               asp-action="ManageFeatured"
+                               asp-route-page="@i"
+                               asp-route-pageSize="@Model.PageSize"
+                               asp_route_search="@Model.Search"
+                               asp-route-search="@Model.Search">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="ManageFeatured"
+                           asp-route-page="@(Model.CurrentPage + 1)"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-search="@Model.Search">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Sample_LadiesClothings.Migrations;
 using Sample_LadiesClothings.Models;
+using System.Drawing.Printing;
 
 namespace Sample_LadiesClothings.Controllers
 {
@@ -94,10 +96,10 @@ namespace Sample_LadiesClothings.Controllers
             return RedirectToAction("Profile");
         }
 
-        public IActionResult FetchCustomers()
-        {
-            return View(_context.tbl_customer.ToList());
-        }
+        //public IActionResult FetchCustomers()
+        //{
+        //    return View(_context.tbl_customer.ToList());
+        //}
         public IActionResult CustomerDetail(int Id)
         {
             
@@ -215,11 +217,75 @@ namespace Sample_LadiesClothings.Controllers
 
         }
 
-        public IActionResult FetchProducts()
+        //public IActionResult FetchProducts()
+        //{
+        //    // var products = _context.tbl_products.Include(p => p.category).ToList();
+        //    return View(_context.tbl_products.ToList());
+        //}
+
+        [HttpGet]
+        public IActionResult FetchProducts(int page = 1, int pageSize = 10, string search = "")
         {
-            // var products = _context.tbl_products.Include(p => p.category).ToList();
-            return View(_context.tbl_products.ToList());
+            if (page < 1) page = 1;
+            if (pageSize <= 0) pageSize = 10;
+
+            var query = _context.tbl_products.AsQueryable();
+
+            // 🔍 Search
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(p =>
+                    p.Product_Name.Contains(search) ||
+                    p.Product_Price.Contains(search)); // Removed .ToString()
+            }
+
+            var totalRecords = query.Count();
+
+            var products = query
+                .OrderByDescending(p => p.Product_Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var model = new ProductListViewModel
+            {
+                Products = products,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                Search = search
+            };
+
+            return View(model);
         }
+
+
+        public IActionResult FetchCustomers(int page = 1)
+        {
+            // Example: fetch all customers from DB
+            var customers = _context.tbl_customer.OrderBy(c => c.Customer_Id).ToList();
+
+            // Total customers count
+            int totalRecords = customers.Count;
+            int pageSize = 10;
+
+            // Total pages
+            int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            // Apply Skip + Take for pagination
+            var pagedCustomers = customers
+                                  .Skip((page - 1) * pageSize)
+                                  .Take(pageSize)
+                                  .ToList();
+
+            // Pass pagination info to view
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalPages = totalPages;
+
+            return View(pagedCustomers);
+        }
+
 
         public IActionResult AddProduct()
         {        
@@ -289,6 +355,34 @@ namespace Sample_LadiesClothings.Controllers
           
         }
 
+      
+        public IActionResult AllCustomers(int page = 1, int pageSize = 10)
+        {
+            // Example: fetch all customers from DB
+            var customers = _context.tbl_customer.OrderBy(c => c.Customer_Id).ToList();
+
+            // Total customers count
+            int totalRecords = customers.Count;
+
+            // Total pages
+            int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            // Apply Skip + Take for pagination
+            var pagedCustomers = customers
+                                  .Skip((page - 1) * pageSize)
+                                  .Take(pageSize)
+                                  .ToList();
+
+            // Pass pagination info to view
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalPages = totalPages;
+
+            return RedirectToAction("FetchCustomers",pagedCustomers);
+        }
+
+
+
         public IActionResult ProductDetail(int Id)
         {
 
@@ -351,6 +445,106 @@ namespace Sample_LadiesClothings.Controllers
             _context.SaveChanges();
             return RedirectToAction("FetchProducts");
         }
+
+
+        //[HttpGet]
+        //public IActionResult ManageFeatured()
+        //{
+        //    var products = _context.tbl_products
+        //                           .OrderByDescending(p => p.Product_Id)
+        //                           .ToList();
+
+        //    return View(products);
+        //}
+        [HttpGet]
+        public IActionResult ManageFeatured(int page = 1, int pageSize = 10, string search = "")
+        {
+            if (page < 1) page = 1;
+            if (pageSize <= 0) pageSize = 10;
+
+            var query = _context.tbl_products.AsQueryable();
+
+            // 🔍 server-side search
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(p =>
+                    p.Product_Name.Contains(search) ||
+                    p.Product_Price.Contains(search)); // Removed .ToString()
+            }
+
+            var totalRecords = query.Count();
+
+            var products = query
+                .OrderByDescending(p => p.Product_Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var model = new ProductListViewModel
+            {
+                Products = products,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                Search = search
+            };
+
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult UpdateFeatured(List<int> featuredIds)
+        {
+            var products = _context.tbl_products.ToList();
+
+            foreach (var product in products)
+            {
+                product.IsFeatured = featuredIds.Contains(product.Product_Id);
+            }
+
+            _context.SaveChanges();
+
+            TempData["Message"] = "Featured products updated successfully!";
+            return RedirectToAction("ManageFeatured");
+        }
+
+        // Replace this block:
+        //public IActionResult ManageFeatured(int page = 1, int pageSize = 10, string search = "")
+        //{
+        //    using (var db = new MyContext())
+        //    {
+        //        var query = db.tbl_products.AsQueryable();
+
+        //        // ✅ Search filter
+        //        if (!string.IsNullOrEmpty(search))
+        //        {
+        //            query = query.Where(p =>
+        //                p.Product_Name.Contains(search) ||
+        //                p.Product_Price.ToString().Contains(search));
+        //        }
+
+        //        // ✅ Pagination
+        //        int totalRecords = query.Count();
+        //        var products = query
+        //            .OrderBy(p => p.Product_Name)
+        //            .Skip((page - 1) * pageSize)
+        //            .Take(pageSize)
+        //            .ToList();
+
+        //        ViewBag.CurrentPage = page;
+        //        ViewBag.PageSize = pageSize;
+        //        ViewBag.TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+        //        ViewBag.Search = search;
+
+        //        return View(products);
+        //    }
+        //}
+
+        // With this:
+       
+
 
     }
 }

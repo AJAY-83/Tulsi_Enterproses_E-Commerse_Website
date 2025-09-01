@@ -58,11 +58,13 @@ namespace Sample_LadiesClothings.Controllers
             var user = await _db.tbl_customer.FirstOrDefaultAsync(c => c.Customer_Email == vm.Email);
             if (user == null)
             {
+                ViewBag.message = "Invalid credentials";
                 ModelState.AddModelError(string.Empty, "Invalid credentials");
                 return View(vm);
             }
             if (string.IsNullOrEmpty(user.Customer_PasswordHash))
             {
+                ViewBag.message = "Invalid credentials";
                 ModelState.AddModelError(string.Empty, "Invalid credentials");
                 return View(vm);
             }
@@ -70,6 +72,7 @@ namespace Sample_LadiesClothings.Controllers
             if (result == PasswordVerificationResult.Failed)
             {
                 ModelState.AddModelError(string.Empty, "Invalid credentials");
+                ViewBag.message = "Invalid credentials";
                 return View(vm);
             }
             await SignInAsync(user);

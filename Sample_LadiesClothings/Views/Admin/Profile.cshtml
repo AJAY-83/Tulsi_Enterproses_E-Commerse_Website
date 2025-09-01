@@ -7,6 +7,76 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
+        <!-- Profile Update Card -->
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>Update Profile</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="Admin" asp-action="Profile">
+                    <input type="hidden" name="Admin_Id" value="@Model[0].Admin_Id" />
+
+                    <div class="form-group mb-3">
+                        <label for="Admin_Name" class="form-label fw-bold">Name</label>
+                        <input type="text" id="Admin_Name" name="Admin_Name" placeholder="Enter Your Name"
+                               class="form-control" value="@Model[0].Admin_Name" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="Admin_Email" class="form-label fw-bold">Email</label>
+                        <input type="email" id="Admin_Email" name="Admin_Email" placeholder="Enter Your Email"
+                               class="form-control" value="@Model[0].Admin_Email" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="Admin_Password" class="form-label fw-bold">Password</label>
+                        <input type="password" id="Admin_Password" name="Admin_Password" placeholder="Enter Your Password"
+                               class="form-control" value="@Model[0].Admin_Password" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-save"></i> Update Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Profile Picture Update Card -->
+        <div class="card shadow-lg">
+            <div class="card-header bg-secondary text-white text-center">
+                <h4>Change Profile Picture</h4>
+            </div>
+            <div class="card-body text-center">
+                <form method="post" asp-controller="Admin" asp-action="Change_Profile_Picture" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <img src="@("~/Admin_images/" + Model[0].Admin_Image)" asp-append-version="true"
+                             class="rounded-circle shadow mb-3" style="height:200px;width:200px;object-fit:cover;" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="Admin_Image" class="form-label fw-bold">Upload New Picture</label>
+                        <input type="file" id="Admin_Image" name="Admin_Image" class="form-control" />
+                    </div>
+
+                    <!-- Hidden Fields -->
+                    <input type="hidden" name="Admin_Id" value="@Model[0].Admin_Id" />
+                    <input type="hidden" name="Admin_Email" value="@Model[0].Admin_Email" />
+                    <input type="hidden" name="Admin_Name" value="@Model[0].Admin_Name" />
+                    <input type="hidden" name="Admin_Password" value="@Model[0].Admin_Password" />
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-upload"></i> Change Profile Picture
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+@* <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
         <form method="post" asp-controller="Admin" asp-action="Profile">
             <input type="hidden" name="Admin_Id" value="@Model[0].Admin_Id" />
             <input type="text" palceholder="Enter Your Name" name="Admin_Name" class="form-control my-3" value="@Model[0].Admin_Name" />
@@ -29,4 +99,4 @@
  </form>
 </div>
     <div class="col-md-2"></div>
-</div>
+</div> *@

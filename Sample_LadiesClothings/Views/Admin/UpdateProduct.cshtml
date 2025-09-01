@@ -15,6 +15,8 @@
             <input type="text" palceholder="Enter Your Product Price" name="Product_Price" class="form-control my-3" value="@Model.Product_Price" />
 @*             <input type="text" palceholder="Enter Your Category_Id" name="Category_Id" class="form-control my-3" value="@Model.Category_Id" />
  *@
+           
+
             @Html.Partial("CategoryDropdown", ViewData["Categories"])
             <input type="submit" value="Update Product" class="btn btn-primary form-control my-3" />
 
